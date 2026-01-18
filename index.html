@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA VISUALISER</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>DSA VISUALISER</h1>
+        <p>Visualize algorithms step by step</p>
+    </header>
+
+    <section class="controls">
+        <button id="generate">Generate Array</button>
+        
+        <select id="algo-select">
+            <option value="" disabled selected>Select Algorithm</option>
+            <option value="bubble">BUBBLE SORT</option>
+            <option value="selection">SELECTION SORT</option>
+            <option value="insertion">INSERTION SORT</option>
+        </select>
+        
+        <!--Range input gives a slider UI-->
+        <label>
+            Speed
+            <input type="range" min="1" max="100"> 
+        </label>
+        <label>
+            size
+            <input type="range" min="10" max="60">
+        </label>
+    </section>
+
+    <!--Think of it as an empty stage where animation happens.-->
+    <section class="visualization">
+        <div id="array-container"></div>
+    </section>
+
+    <section>
+        <h2>ALGORITHM INFORMATION</h2>
+
+        <p id="algo-desc">
+            select algorithm to see explanation
+        </p>
+
+        <ul>
+            <li>Time Complexity: <span id="time"></span></li>
+            <li>Space Complexity: <span id="space"></span></li>
+        </ul>
+    </section>
+    <footer>
+    <p>Built by Payal Tyagi</p>
+    </footer>
+
+    <script src="javascript/main.js"></script>
+</body>
+</html>
