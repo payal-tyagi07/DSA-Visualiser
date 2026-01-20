@@ -1,9 +1,9 @@
 async function bubbleSort(){
-    const bars=document.getElementById("bar");
+    const bars=document.getElementsByClassName("bar");
 
-    for(let i=0;i<array.length;i++)
+    for(let i=0;i<bars.length;i++)
     {
-        for(let j=0;j<array.length-i-1;j++)
+        for(let j=0;j<bars.length-i-1;j++)
         {
             bars[j].style.background="red";
             bars[j+1].style.background="red";

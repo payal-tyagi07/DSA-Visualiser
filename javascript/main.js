@@ -31,5 +31,14 @@ function sleep(ms)
     return new Promise(resolve=>setTimeout(resolve,ms));
 }
 
+//run selected algorithm
+algoSelect.addEventListener("change",()=>{
+    const algo=algoSelect.value;
+
+    if(algo=="bubble") bubbleSort();
+    if(algo=="selection") selectionSort();
+    if(algo=="insertion") insertionSort();
+});
+
 
 
