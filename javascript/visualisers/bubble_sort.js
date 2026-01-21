@@ -1,6 +1,7 @@
 async function bubbleSort(){
     const bars=document.getElementsByClassName("bar");
 
+    
     for(let i=0;i<bars.length;i++)
     {
         for(let j=0;j<bars.length-i-1;j++)
