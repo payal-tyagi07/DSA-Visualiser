@@ -135,7 +135,7 @@ const BubbleSortEnhanced = () => {
         <button onClick={() => { setCurrentStep(Math.min(steps.length-1, currentStep+1)); setIsPlaying(false); }} disabled={currentStep === steps.length-1} className={`px-6 py-3 rounded-lg font-semibold shadow-md ${currentStep === steps.length-1 ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}>Next →</button>
       </div>
 
-      {/* Current array */}
+      {/* Current array.. */}
       <div className="mt-4 text-center">
         <div className="inline-block bg-gray-800 dark:bg-gray-900 text-green-400 font-mono px-4 py-2 rounded-lg">
           Current: [{steps[currentStep].array.join(', ')}]
