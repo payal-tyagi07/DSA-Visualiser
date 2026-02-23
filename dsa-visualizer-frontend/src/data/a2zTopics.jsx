@@ -1,4 +1,3 @@
-// Complete A2Z Sheet structure – includes Bubble Sort under Sorting Techniques
 const topics = [
   {
     id: 'step1',
@@ -11,12 +10,9 @@ const topics = [
         name: 'Things to Know',
         problems: [
           { id: 'input-output', name: 'User Input / Output', visualizable: false },
-          { id: 'data-types', name: 'Data Types', visualizable: false },
-          { id: 'if-else', name: 'If Else statements', visualizable: false },
-          // ... add more if you like
+          // ... more problems
         ]
-      },
-      // ... other subtopics (you can expand later)
+      }
     ]
   },
   {
@@ -44,7 +40,6 @@ const topics = [
       }
     ]
   }
-  // Add all other steps as needed (Step 3: Arrays, Step 4: Binary Search, etc.)
 ];
 
 export default topics;
