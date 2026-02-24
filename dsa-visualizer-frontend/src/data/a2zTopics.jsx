@@ -10,7 +10,7 @@ const topics = [
         name: 'Things to Know',
         problems: [
           { id: 'input-output', name: 'User Input / Output', visualizable: false },
-          // ... more problems
+          
         ]
       }
     ]
