@@ -3,12 +3,14 @@ import BubbleSortEnhanced from './BubbleSortEnhanced';
 import SelectionSort from './SelectionSort';
 import InsertionSort from './InsertionSort';
 import MergeSort from './MergeSort';
+import QuickSort from './QuickSort';
 
 const componentMap = {
   'bubble-sort': BubbleSortEnhanced,
   'selection-sort': SelectionSort,
   'insertion-sort': InsertionSort,
   'merge-sort' : MergeSort,
+  'quick-sort' : QuickSort,
 };
 
 const VisualizationRenderer = ({ algorithm }) => {
