@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const QuickSort = () => {
-  // Pseudocode lines (0-indexed)
+  // Pseudocode lines (same as before)
   const pseudocodeLines = [
     "procedure quickSort(arr, low, high):",
     "  if low < high:",
@@ -20,206 +20,156 @@ const QuickSort = () => {
     "  return i + 1"
   ];
 
-  const steps = [
-    // Step 0: Initial
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [],
-      swapping: [],
-      sorted: [],
-      description: "Initial unsorted array",
-      pseudocodeLine: 0
-    },
 
-    // --- First partition (pivot = 9) ---
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0],
-      swapping: [],
-      sorted: [],
-      description: "Choose pivot: 9 (first element)",
-      pseudocodeLine: 6
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 1],
-      swapping: [],
-      sorted: [],
-      description: "Compare 6 with pivot 9 – less, leave in place",
-      pseudocodeLine: 9
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 2],
-      swapping: [],
-      sorted: [],
-      description: "Compare 4 with pivot 9 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 3],
-      swapping: [],
-      sorted: [],
-      description: "Compare 8 with pivot 9 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 4],
-      swapping: [],
-      sorted: [],
-      description: "Compare 2 with pivot 9 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 5],
-      swapping: [],
-      sorted: [],
-      description: "Compare 10 with pivot 9 – greater, will go to right side",
-      pseudocodeLine: 9
-    },
-    {
-      array: [9, 6, 4, 8, 2, 10, 1],
-      comparing: [0, 6],
-      swapping: [],
-      sorted: [],
-      description: "Compare 1 with pivot 9 – less, leave",
-      pseudocodeLine: 9
-    },
-    // Partition complete: swap pivot (9) with the element just before the greater section (10)
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [],
-      swapping: [0, 1, 2, 3, 4, 5],
-      sorted: [5],
-      description: "Pivot 9 placed in correct position (index 5). Left side [6,4,8,2,1] (unsorted), right side [10] (unsorted)",
-      pseudocodeLine: 11
-    },
+const steps = [
+  // ----- Initial -----
+  {
+    array: [9, 6, 4, 8, 2, 10, 1],
+    comparing: [],
+    swapping: [],
+    sorted: [],
+    description: "Initial unsorted array",
+    pseudocodeLine: 0
+  },
 
-    // --- Left subarray [6,4,8,2,1] with pivot 6 (first element) ---
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [0],
-      swapping: [],
-      sorted: [5],
-      description: "Left subarray: choose pivot 6",
-      pseudocodeLine: 6
-    },
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [0, 1],
-      swapping: [],
-      sorted: [5],
-      description: "Compare 4 with pivot 6 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [0, 2],
-      swapping: [],
-      sorted: [5],
-      description: "Compare 8 with pivot 6 – greater, mark for right side",
-      pseudocodeLine: 9
-    },
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [0, 3],
-      swapping: [],
-      sorted: [5],
-      description: "Compare 2 with pivot 6 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [6, 4, 8, 2, 1, 9, 10],
-      comparing: [0, 4],
-      swapping: [],
-      sorted: [5],
-      description: "Compare 1 with pivot 6 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [4, 2, 1, 6, 8, 9, 10],
-      comparing: [],
-      swapping: [0, 1, 2, 3],
-      sorted: [3, 5],
-      description: "Pivot 6 placed at index 3. Left side [4,2,1], right side [8]",
-      pseudocodeLine: 11
-    },
+  // ----- Divide: show halves -----
+  {
+    array: [9, 6, 4, 8, 2, 10, 1],
+    comparing: [0, 1, 2],
+    swapping: [],
+    sorted: [],
+    description: "Divide: left half [9, 6, 4]",
+    pseudocodeLine: 2
+  },
+  {
+    array: [9, 6, 4, 8, 2, 10, 1],
+    comparing: [3, 4, 5, 6],
+    swapping: [],
+    sorted: [],
+    description: "Divide: right half [8, 2, 10, 1]",
+    pseudocodeLine: 2
+  },
 
-    // --- Left-left subarray [4,2,1] with pivot 4 ---
-    {
-      array: [4, 2, 1, 6, 8, 9, 10],
-      comparing: [0],
-      swapping: [],
-      sorted: [3, 5],
-      description: "Subarray [4,2,1]: choose pivot 4",
-      pseudocodeLine: 6
-    },
-    {
-      array: [4, 2, 1, 6, 8, 9, 10],
-      comparing: [0, 1],
-      swapping: [],
-      sorted: [3, 5],
-      description: "Compare 2 with pivot 4 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [4, 2, 1, 6, 8, 9, 10],
-      comparing: [0, 2],
-      swapping: [],
-      sorted: [3, 5],
-      description: "Compare 1 with pivot 4 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [2, 1, 4, 6, 8, 9, 10],
-      comparing: [],
-      swapping: [0, 1, 2],
-      sorted: [2, 3, 5],
-      description: "Pivot 4 placed at index 2. Left side [2,1]",
-      pseudocodeLine: 11
-    },
+  // ----- Merge within left half: [6] and [4] -----
+  {
+    array: [9, 6, 4, 8, 2, 10, 1],
+    comparing: [1, 2],
+    swapping: [],
+    sorted: [],
+    description: "Merging [6] and [4] within left half",
+    pseudocodeLine: 10
+  },
+  {
+    array: [9, 4, 6, 8, 2, 10, 1],
+    comparing: [],
+    swapping: [1, 2],
+    sorted: [],
+    description: "After merge: [4, 6] replaces [6, 4]",
+    pseudocodeLine: 12
+  },
 
-    // --- Subarray [2,1] with pivot 2 ---
-    {
-      array: [2, 1, 4, 6, 8, 9, 10],
-      comparing: [0],
-      swapping: [],
-      sorted: [2, 3, 5],
-      description: "Subarray [2,1]: choose pivot 2",
-      pseudocodeLine: 6
-    },
-    {
-      array: [2, 1, 4, 6, 8, 9, 10],
-      comparing: [0, 1],
-      swapping: [],
-      sorted: [2, 3, 5],
-      description: "Compare 1 with pivot 2 – less, leave",
-      pseudocodeLine: 9
-    },
-    {
-      array: [1, 2, 4, 6, 8, 9, 10],
-      comparing: [],
-      swapping: [0, 1],
-      sorted: [0, 1, 2, 3, 5],
-      description: "Pivot 2 placed at index 1. All left elements now sorted",
-      pseudocodeLine: 11
-    },
+  // ----- Merge within left half: [9] and [4, 6] -----
+  {
+    array: [9, 4, 6, 8, 2, 10, 1],
+    comparing: [0, 1],
+    swapping: [],
+    sorted: [],
+    description: "Merging [9] and [4, 6]",
+    pseudocodeLine: 10
+  },
+  {
+    array: [4, 6, 9, 8, 2, 10, 1],
+    comparing: [],
+    swapping: [0, 1, 2],
+    sorted: [],
+    description: "After merge: left half now sorted [4, 6, 9]",
+    pseudocodeLine: 12
+  },
 
-    // --- Right side of first pivot: [10] (already single element) ---
-    {
-      array: [1, 2, 4, 6, 8, 9, 10],
-      comparing: [],
-      swapping: [],
-      sorted: [0, 1, 2, 3, 4, 5, 6],
-      description: "Array fully sorted! 🎉",
-      pseudocodeLine: 0
-    }
-  ];
+  // ----- Merge within right half: [8] and [2] -----
+  {
+    array: [4, 6, 9, 8, 2, 10, 1],
+    comparing: [3, 4],
+    swapping: [],
+    sorted: [],
+    description: "Merging [8] and [2] within right half",
+    pseudocodeLine: 10
+  },
+  {
+    array: [4, 6, 9, 2, 8, 10, 1],
+    comparing: [],
+    swapping: [3, 4],
+    sorted: [],
+    description: "After merge: [2, 8]",
+    pseudocodeLine: 12
+  },
 
-  const [currentStep, setCurrentStep] = useState(0);
+  // ----- Merge within right half: [10] and [1] -----
+  {
+    array: [4, 6, 9, 2, 8, 10, 1],
+    comparing: [5, 6],
+    swapping: [],
+    sorted: [],
+    description: "Merging [10] and [1] within right half",
+    pseudocodeLine: 10
+  },
+  {
+    array: [4, 6, 9, 2, 8, 1, 10],
+    comparing: [],
+    swapping: [5, 6],
+    sorted: [],
+    description: "After merge: [1, 10]",
+    pseudocodeLine: 12
+  },
+
+  // ----- Merge the two sorted halves of right part: [2,8] and [1,10] -----
+  {
+    array: [4, 6, 9, 2, 8, 1, 10],
+    comparing: [3, 4, 5, 6],
+    swapping: [],
+    sorted: [],
+    description: "Merging [2, 8] and [1, 10]",
+    pseudocodeLine: 10
+  },
+  {
+    array: [4, 6, 9, 1, 2, 8, 10],
+    comparing: [],
+    swapping: [3, 4, 5, 6],
+    sorted: [],
+    description: "After merge: right half now sorted [1, 2, 8, 10]",
+    pseudocodeLine: 12
+  },
+
+  // ----- Final merge: left [4,6,9] and right [1,2,8,10] -----
+  {
+    array: [4, 6, 9, 1, 2, 8, 10],
+    comparing: [0, 1, 2, 3, 4, 5, 6],
+    swapping: [],
+    sorted: [],
+    description: "Final merge of left and right halves",
+    pseudocodeLine: 10
+  },
+  {
+    array: [1, 2, 4, 6, 8, 9, 10],
+    comparing: [],
+    swapping: [0, 1, 2, 3, 4, 5, 6],
+    sorted: [],
+    description: "After merge: array fully sorted",
+    pseudocodeLine: 12
+  },
+
+  // ----- Final sorted state -----
+  {
+    array: [1, 2, 4, 6, 8, 9, 10],
+    comparing: [],
+    swapping: [],
+    sorted: [0, 1, 2, 3, 4, 5, 6],
+    description: "Merge sort complete! 🎉",
+    pseudocodeLine: 0
+  }
+];
+
+ const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
 
@@ -235,92 +185,155 @@ const QuickSort = () => {
 
   const getBgColor = (index) => {
     if (steps[currentStep].comparing?.includes(index)) return 'bg-yellow-500';
-    if (steps[currentStep].swapping?.includes(index)) return 'bg-green-500';
-    if (steps[currentStep].sorted?.includes(index)) return 'bg-gray-400';
+    if (steps[currentStep].swapping?.includes(index)) return 'bg-orange-500';
+    if (steps[currentStep].sorted?.includes(index)) return 'bg-green-600';
     return 'bg-blue-500';
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">Quick Sort Visualization</h2>
-      <p className="text-center text-gray-600 dark:text-gray-400 mb-6">Initial: [9, 6, 4, 8, 2, 10, 1]</p>
+    <div className="max-w-6xl mx-auto p-6 bg-[#0a0a0a] text-gray-200 rounded-2xl shadow-2xl transition-all duration-300 font-mono border border-[#222222]">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Quick Sort Visualization</h2>
+        <p className="text-[#9cdcfe]">
+          Initial: <span className="text-[#ce9178]">[9, 6, 4, 8, 2, 10, 1]</span>
+        </p>
+      </div>
 
-      {/* Main content with two columns */}
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Left column: Visualization */}
-        <div className="lg:w-2/3">
-          {/* Number blocks */}
-          <div className="flex justify-center gap-3 flex-wrap mb-6">
+        <div className="lg:w-2/3 space-y-6">
+          <div className="flex justify-center gap-3 flex-wrap">
             {steps[currentStep].array.map((num, idx) => (
               <div
                 key={idx}
-                className={`w-16 h-16 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 ${getBgColor(idx)}`}
+                className={`
+                  w-16 h-16 rounded-lg shadow-lg flex items-center justify-center
+                  text-white font-bold text-2xl transition-all duration-300
+                  transform hover:scale-110 hover:shadow-2xl
+                  border-2 border-[#222222]
+                  ${getBgColor(idx)}
+                `}
               >
                 {num}
               </div>
             ))}
           </div>
 
-          {/* Legend */}
-          <div className="flex justify-center gap-6 mb-4 flex-wrap text-sm">
-            <span className="flex items-center text-gray-700 dark:text-gray-300"><span className="w-3 h-3 bg-blue-500 rounded-full mr-1"></span> Unsorted</span>
-            <span className="flex items-center text-gray-700 dark:text-gray-300"><span className="w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Comparing (pivot)</span>
-            <span className="flex items-center text-gray-700 dark:text-gray-300"><span className="w-3 h-3 bg-green-500 rounded-full mr-1"></span> Swapping/Placing pivot</span>
-            <span className="flex items-center text-gray-700 dark:text-gray-300"><span className="w-3 h-3 bg-gray-400 rounded-full mr-1"></span> Sorted</span>
+          <div className="flex justify-center gap-6 flex-wrap text-sm">
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-blue-500 rounded-full"></span>
+              <span className="text-gray-300">Unsorted</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-yellow-500 rounded-full"></span>
+              <span className="text-gray-300">Comparing (pivot)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-orange-500 rounded-full"></span>
+              <span className="text-gray-300">Swapping/Placing pivot</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-green-600 rounded-full"></span>
+              <span className="text-gray-300">Sorted</span>
+            </div>
           </div>
 
-          {/* Description */}
-          <div className="bg-blue-50 dark:bg-blue-900 p-3 rounded-lg mb-4 border-l-4 border-blue-500">
-            <p className="text-gray-700 dark:text-gray-200"><span className="font-semibold">Step {currentStep+1}:</span> {steps[currentStep].description}</p>
+          <div className="bg-[#0d0d0d] p-4 rounded-lg border-l-4 border-[#569cd6]">
+            <p className="text-gray-300">
+              <span className="font-bold text-[#9cdcfe]">Step {currentStep + 1}:</span> {steps[currentStep].description}
+            </p>
           </div>
 
-          {/* Progress */}
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <div>
+            <div className="flex justify-between text-sm text-gray-400 mb-1">
               <span>Progress</span>
-              <span>{Math.round((currentStep+1)/steps.length*100)}%</span>
+              <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${((currentStep+1)/steps.length)*100}%` }}></div>
+            <div className="w-full bg-[#1a1a1a] rounded-full h-3 overflow-hidden">
+              <div
+                className="bg-[#4ec9b0] h-3 rounded-full transition-all duration-300"
+                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              ></div>
             </div>
-            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-1">Step {currentStep+1} of {steps.length}</div>
+            <div className="text-center text-xs text-gray-500 mt-1">
+              Step {currentStep + 1} of {steps.length}
+            </div>
           </div>
 
-          {/* Speed control */}
-          <div className="flex items-center justify-center gap-4 mb-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-            <span className="text-gray-700 dark:text-gray-300">⏱️ Speed:</span>
-            <input type="range" min="300" max="2000" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="w-64 accent-blue-500" />
-            <span className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-sm">{speed}ms</span>
+          <div className="flex items-center justify-center gap-4 bg-[#0d0d0d] p-3 rounded-lg">
+            <span className="text-gray-300 font-medium">⏱️ Speed:</span>
+            <input
+              type="range"
+              min="300"
+              max="2000"
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+              className="w-48 md:w-64 accent-[#4ec9b0]"
+            />
+            <span className="text-gray-300 bg-[#1a1a1a] px-3 py-1 rounded-full shadow-sm">
+              {speed}ms
+            </span>
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-center gap-4 flex-wrap">
-            <button onClick={() => { setCurrentStep(Math.max(0, currentStep-1)); setIsPlaying(false); }} disabled={currentStep === 0} className={`px-6 py-3 rounded-lg font-semibold shadow-md transition-all ${currentStep === 0 ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}>← Previous</button>
-            <button onClick={() => { setCurrentStep(0); setIsPlaying(false); }} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold shadow-md">Reset</button>
-            <button onClick={() => setIsPlaying(!isPlaying)} disabled={currentStep === steps.length-1} className={`px-6 py-3 rounded-lg font-semibold shadow-md ${currentStep === steps.length-1 ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed' : isPlaying ? 'bg-yellow-500 hover:bg-yellow-600 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}>{isPlaying ? '⏸️ Pause' : '▶️ Play'}</button>
-            <button onClick={() => { setCurrentStep(Math.min(steps.length-1, currentStep+1)); setIsPlaying(false); }} disabled={currentStep === steps.length-1} className={`px-6 py-3 rounded-lg font-semibold shadow-md ${currentStep === steps.length-1 ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}>Next →</button>
+            <button
+              onClick={() => { setCurrentStep(Math.max(0, currentStep-1)); setIsPlaying(false); }}
+              disabled={currentStep === 0}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 ${
+                currentStep === 0
+                  ? 'bg-[#1a1a1a] text-gray-500 cursor-not-allowed'
+                  : 'bg-[#0e639c] hover:bg-[#1177bb] text-white'
+              }`}
+            >← Previous</button>
+            <button
+              onClick={() => { setCurrentStep(0); setIsPlaying(false); }}
+              className="px-6 py-3 bg-[#c2410c] hover:bg-[#b91c1c] text-white rounded-lg font-semibold hover:scale-105 active:scale-95 transition-all"
+            >Reset</button>
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              disabled={currentStep === steps.length - 1}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 ${
+                currentStep === steps.length - 1
+                  ? 'bg-[#1a1a1a] text-gray-500 cursor-not-allowed'
+                  : isPlaying
+                  ? 'bg-[#ca5100] hover:bg-[#b74700] text-white'
+                  : 'bg-[#2e7d32] hover:bg-[#1e5f20] text-white'
+              }`}
+            >{isPlaying ? '⏸️ Pause' : '▶️ Play'}</button>
+            <button
+              onClick={() => { setCurrentStep(Math.min(steps.length - 1, currentStep + 1)); setIsPlaying(false); }}
+              disabled={currentStep === steps.length - 1}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 ${
+                currentStep === steps.length - 1
+                  ? 'bg-[#1a1a1a] text-gray-500 cursor-not-allowed'
+                  : 'bg-[#0e639c] hover:bg-[#1177bb] text-white'
+              }`}
+            >Next →</button>
           </div>
 
-          {/* Current array */}
-          <div className="mt-4 text-center">
-            <div className="inline-block bg-gray-800 dark:bg-gray-900 text-green-400 font-mono px-4 py-2 rounded-lg">
+          <div className="text-center">
+            <div className="inline-block bg-[#0a0a0a] border border-[#222222] text-[#ce9178] font-mono px-4 py-2 rounded-lg shadow-md">
               Current: [{steps[currentStep].array.join(', ')}]
             </div>
           </div>
         </div>
 
-        {/* Right column: Pseudocode */}
-        <div className="lg:w-1/3 bg-gray-100 dark:bg-gray-700 rounded-xl p-4 font-mono text-sm shadow-inner">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-3">Pseudocode</h3>
-          <div className="space-y-1">
+        <div className="lg:w-1/3 bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 font-mono text-sm shadow-inner">
+          <h3 className="text-lg font-bold text-[#569cd6] mb-4 flex items-center gap-2">
+            <span>📝</span> PSEUDOCODE
+          </h3>
+          <div className="space-y-1 overflow-x-auto">
             {pseudocodeLines.map((line, idx) => (
               <div
                 key={idx}
-                className={`px-2 py-1 rounded ${
-                  idx === steps[currentStep].pseudocodeLine
-                    ? 'bg-yellow-300 dark:bg-yellow-600 text-gray-900 dark:text-white font-semibold'
-                    : 'text-gray-700 dark:text-gray-300'
-                }`}
+                className={`
+                  px-3 py-1.5 rounded transition-all duration-200
+                  ${
+                    idx === steps[currentStep].pseudocodeLine
+                      ? 'bg-[#1a1a1a] text-[#d4d4d4] font-semibold border-l-4 border-[#569cd6]'
+                      : 'text-[#9cdcfe] hover:bg-[#1a1a1a]'
+                  }
+                `}
               >
                 {line}
               </div>

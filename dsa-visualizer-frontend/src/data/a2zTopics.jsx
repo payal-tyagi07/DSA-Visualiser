@@ -28,8 +28,6 @@ const topics = [
           { id: 'bubble-sort', name: 'Bubble Sort', visualizable: true },
           { id: 'selection-sort', name: 'Selection Sort', visualizable: true },
           { id: 'insertion-sort', name: 'Insertion Sort', visualizable: true },
-          { id: 'merge-sort', name: 'merge Sort', visualizable: true },
-          { id: 'quick-sort', name: 'quick Sort', visualizable: true },
         ]
       },
       {
