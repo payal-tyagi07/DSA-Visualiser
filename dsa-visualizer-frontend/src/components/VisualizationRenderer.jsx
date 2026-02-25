@@ -2,11 +2,13 @@ import React from 'react';
 import BubbleSortEnhanced from './BubbleSortEnhanced';
 import SelectionSort from './SelectionSort';
 import InsertionSort from './InsertionSort';
+import MergeSort from './MergeSort';
 
 const componentMap = {
   'bubble-sort': BubbleSortEnhanced,
   'selection-sort': SelectionSort,
   'insertion-sort': InsertionSort,
+  'merge-sort' : MergeSort,
 };
 
 const VisualizationRenderer = ({ algorithm }) => {

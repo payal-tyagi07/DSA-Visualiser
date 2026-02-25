@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const InsertionSort = () => {
   const steps = [
+        { array: [9, 6, 4, 8, 2, 10, 1], comparing: [], swapping: [], sorted: [], description: "Initial array – all elements unsorted" },
     // Initial state
     { array: [9, 6, 4, 8, 2, 10, 1], comparing: [], swapping: [], sorted: [0], description: "Start with first element (9) as sorted" },
 
