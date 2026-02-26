@@ -23,7 +23,6 @@ const MergeSort = () => {
 
 
 const steps = [
-  // ----- Initial -----
   {
     array: [9, 6, 4, 8, 2, 10, 1],
     comparing: [],
