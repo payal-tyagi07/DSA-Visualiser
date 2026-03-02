@@ -4,6 +4,7 @@ import SelectionSort from './SelectionSort';
 import InsertionSort from './InsertionSort';
 import MergeSort from './MergeSort';
 import QuickSort from './QuickSort';
+import BinarySearch from './BinarySearch';
 
 const componentMap = {
   'bubble-sort': BubbleSortEnhanced,
@@ -11,6 +12,8 @@ const componentMap = {
   'insertion-sort': InsertionSort,
   'merge-sort' : MergeSort,
   'quick-sort' : QuickSort,
+  'binary-search': BinarySearch,
+
 };
 
 const VisualizationRenderer = ({ algorithm }) => {
