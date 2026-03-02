@@ -5,6 +5,8 @@ import InsertionSort from './InsertionSort';
 import MergeSort from './MergeSort';
 import QuickSort from './QuickSort';
 import BinarySearch from './BinarySearch';
+import lowerBoundSearch from './lowerBoundSearch';
+import upperBoundSearch from './upperBoundSearch';
 
 const componentMap = {
   'bubble-sort': BubbleSortEnhanced,
@@ -13,6 +15,8 @@ const componentMap = {
   'merge-sort' : MergeSort,
   'quick-sort' : QuickSort,
   'binary-search': BinarySearch,
+  'lowerBoundSearch' : lowerBoundSearch,
+  'upperBoundSearch' : upperBoundSearch,
 
 };
 
