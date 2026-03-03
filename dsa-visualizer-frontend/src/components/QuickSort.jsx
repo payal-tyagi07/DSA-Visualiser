@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 const QuickSort = () => {
-  // Pseudocode lines (same as before)
   const pseudocodeLines = [
     "procedure quickSort(arr, low, high):",
     "  if low < high:",
