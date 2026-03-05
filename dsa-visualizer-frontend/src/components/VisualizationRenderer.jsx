@@ -8,6 +8,11 @@ import BinarySearch from './BinarySearch';
 import LowerBoundSearch from './LowerBoundSearch';
 import UpperBoundSearch from './UpperBoundSearch';
 import SearchInsertPosition from './SearchInsertPosition';
+import SearchRotated from './SearchRotated';
+import FindMinRotated from './FindMinRotated';
+import SingleElementSorted from './SingleElementSorted';
+import PeakElement from './PeakElement';
+import FirstLastOccurrence from './FirstLastOccurrence';
 
 const componentMap = {
   'bubble-sort': BubbleSortEnhanced,
@@ -19,7 +24,11 @@ const componentMap = {
   'lower-bound' : LowerBoundSearch,
   'upper-bound' : UpperBoundSearch,
   'search-insert' : SearchInsertPosition,
-
+  'search-rotated': SearchRotated,
+  'find-min-rotated': FindMinRotated,
+  'single-element': SingleElementSorted,
+  'peak-element': PeakElement,
+  'first-last-occurrence': FirstLastOccurrence,
 };
 
 const VisualizationRenderer = ({ algorithm }) => {
