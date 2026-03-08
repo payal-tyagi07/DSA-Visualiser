@@ -28,6 +28,8 @@ import MedianTwoArrays from './MedianTwoArrays';
 import KthTwoArrays from './KthTwoArrays';
 import GasStations from './GasStations';
 import Bouquets from './Bouquets';
+import PeakElement2D from './PeakElement2D';
+import MatrixMedian from './MatrixMedian';
 
 // Map algorithm IDs to their components
 const componentMap = {
@@ -50,6 +52,8 @@ const componentMap = {
 
   // Binary search on 2D & answer concept
   'search-2d-matrix': Search2DMatrix,
+  'peak-element-2d': PeakElement2D,
+  'matrix-median': MatrixMedian,
   'sqrt': SquareRoot,
   'koko-eating-bananas': KokoBananas,
   'ship-capacity': ShipCapacity,

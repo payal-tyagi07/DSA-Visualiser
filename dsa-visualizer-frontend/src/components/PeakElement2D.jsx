@@ -1,134 +1,190 @@
 import React, { useState, useEffect } from 'react';
 
-const Search2DMatrix = () => {
+const PeakElement2D = () => {
   const pseudocodeLines = [
-    "procedure searchMatrix(matrix, target):",
-    "  rows = length(matrix), cols = length(matrix[0])",
-    "  low = 0, high = rows * cols - 1",
-    "  while low <= high:",
-    "    mid = floor((low + high) / 2)",
-    "    r = mid // cols",
-    "    c = mid % cols",
-    "    if matrix[r][c] == target: return true",
-    "    else if matrix[r][c] < target: low = mid + 1",
-    "    else: high = mid - 1",
-    "  return false"
+    "procedure findPeak2D(matrix):",
+    "  lowCol = 0, highCol = cols - 1",
+    "  while lowCol <= highCol:",
+    "    midCol = floor((lowCol + highCol) / 2)",
+    "    maxRow = argmax(matrix[r][midCol] for r)",
+    "    left = matrix[maxRow][midCol-1] if midCol > 0 else -∞",
+    "    right = matrix[maxRow][midCol+1] if midCol < cols-1 else -∞",
+    "    if matrix[maxRow][midCol] > left and > right:",
+    "      return (maxRow, midCol)",
+    "    else if left > matrix[maxRow][midCol]:",
+    "      highCol = midCol - 1",
+    "    else:",
+    "      lowCol = midCol + 1",
+    "  return (-1, -1)"
   ];
 
-  // Fixed 3x4 matrix (flattened input)
-  const defaultArrayInput = '1,3,5,7,10,11,16,20,23,30,34,60';
-  const defaultTargetInput = '3';
+  // Fixed 4x4 matrix (flattened)
+  const defaultArrayInput = '10,20,15,12,21,30,14,13,7,9,25,18,8,11,23,22';
+  const defaultRows = 4;
+  const defaultCols = 4;
 
   const [arrayInput, setArrayInput] = useState(defaultArrayInput);
-  const [targetInput, setTargetInput] = useState(defaultTargetInput);
+  const [rowsInput, setRowsInput] = useState(defaultRows.toString());
+  const [colsInput, setColsInput] = useState(defaultCols.toString());
   const [array, setArray] = useState([]);
-  const [target, setTarget] = useState(null);
+  const [rows, setRows] = useState(defaultRows);
+  const [cols, setCols] = useState(defaultCols);
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
 
-  // Matrix dimensions (fixed 3x4)
-  const rows = 3;
-  const cols = 4;
-
   const updateInputs = () => {
     const arrStr = arrayInput.split(',').map(s => s.trim()).filter(s => s !== '');
     const newArray = arrStr.map(Number).filter(n => !isNaN(n));
-    const newTarget = Number(targetInput);
-    if (newArray.length === 0 || isNaN(newTarget)) return;
+    const newRows = parseInt(rowsInput);
+    const newCols = parseInt(colsInput);
+    if (newArray.length !== newRows * newCols) {
+      alert(`Array must have exactly ${newRows * newCols} numbers.`);
+      return;
+    }
     setArray(newArray);
-    setTarget(newTarget);
+    setRows(newRows);
+    setCols(newCols);
   };
 
-  const generateSteps = (arr, target) => {
+  const generateSteps = (arr, rows, cols) => {
     const steps = [];
-    let low = 0;
-    let high = arr.length - 1;
-    let found = false;
+    let lowCol = 0;
+    let highCol = cols - 1;
+    let resultRow = -1, resultCol = -1;
 
     steps.push({
-      array: [...arr],
-      low,
-      high,
-      mid: null,
+      array: arr,
+      rows,
+      cols,
+      lowCol,
+      highCol,
+      midCol: null,
+      maxRow: null,
+      left: null,
+      right: null,
       result: null,
-      description: `2D matrix: ${rows}x${cols}. Search for ${target}`,
+      description: `Find a peak in ${rows}x${cols} matrix`,
       pseudocodeLine: 1
     });
 
-    while (low <= high) {
-      const mid = Math.floor((low + high) / 2);
-      const r = Math.floor(mid / cols);
-      const c = mid % cols;
+    while (lowCol <= highCol) {
+      const midCol = Math.floor((lowCol + highCol) / 2);
+      // Find row with maximum value in this column
+      let maxRow = 0;
+      let maxVal = arr[maxRow * cols + midCol];
+      for (let r = 1; r < rows; r++) {
+        const val = arr[r * cols + midCol];
+        if (val > maxVal) {
+          maxVal = val;
+          maxRow = r;
+        }
+      }
+
+      const left = midCol > 0 ? arr[maxRow * cols + (midCol - 1)] : -Infinity;
+      const right = midCol < cols - 1 ? arr[maxRow * cols + (midCol + 1)] : -Infinity;
+      const current = arr[maxRow * cols + midCol];
+
       steps.push({
-        array: [...arr],
-        low,
-        high,
-        mid,
+        array: arr,
+        rows,
+        cols,
+        lowCol,
+        highCol,
+        midCol,
+        maxRow,
+        left,
+        right,
         result: null,
-        description: `mid = ${mid} → row ${r}, col ${c} = ${arr[mid]}`,
-        pseudocodeLine: 4
+        description: `midCol = ${midCol}, max in column at row ${maxRow} (value ${current})`,
+        pseudocodeLine: 3
       });
 
-      if (arr[mid] === target) {
-        found = true;
+      if (current > left && current > right) {
+        resultRow = maxRow;
+        resultCol = midCol;
         steps.push({
-          array: [...arr],
-          low,
-          high,
-          mid,
-          result: mid,
-          description: `Found ${target} at index ${mid} (row ${r}, col ${c})! 🎉`,
+          array: arr,
+          rows,
+          cols,
+          lowCol,
+          highCol,
+          midCol,
+          maxRow,
+          left,
+          right,
+          result: [resultRow, resultCol],
+          description: `Peak found at (${resultRow}, ${resultCol}) = ${current} 🎉`,
           pseudocodeLine: 5
         });
         break;
-      } else if (arr[mid] < target) {
-        low = mid + 1;
+      } else if (left > current) {
+        highCol = midCol - 1;
         steps.push({
-          array: [...arr],
-          low,
-          high,
-          mid,
+          array: arr,
+          rows,
+          cols,
+          lowCol,
+          highCol,
+          midCol,
+          maxRow,
+          left,
+          right,
           result: null,
-          description: `${arr[mid]} < ${target} → search right half, low = ${low}`,
-          pseudocodeLine: 6
+          description: `left neighbor ${left} > ${current} → search left, highCol = ${highCol}`,
+          pseudocodeLine: 7
         });
       } else {
-        high = mid - 1;
+        lowCol = midCol + 1;
         steps.push({
-          array: [...arr],
-          low,
-          high,
-          mid,
+          array: arr,
+          rows,
+          cols,
+          lowCol,
+          highCol,
+          midCol,
+          maxRow,
+          left,
+          right,
           result: null,
-          description: `${arr[mid]} > ${target} → search left half, high = ${high}`,
-          pseudocodeLine: 7
+          description: `right neighbor ${right} > ${current} → search right, lowCol = ${lowCol}`,
+          pseudocodeLine: 8
         });
       }
 
-      if (low <= high && !found) {
+      if (lowCol <= highCol && resultRow === -1) {
         steps.push({
-          array: [...arr],
-          low,
-          high,
-          mid: null,
+          array: arr,
+          rows,
+          cols,
+          lowCol,
+          highCol,
+          midCol: null,
+          maxRow: null,
+          left: null,
+          right: null,
           result: null,
-          description: `Now search in [${low}, ${high}]`,
+          description: `Now search columns [${lowCol}, ${highCol}]`,
           pseudocodeLine: 2
         });
       }
     }
 
-    if (!found) {
+    if (resultRow === -1) {
       steps.push({
-        array: [...arr],
-        low,
-        high,
-        mid: null,
-        result: -1,
-        description: `${target} not found in matrix.`,
-        pseudocodeLine: 8
+        array: arr,
+        rows,
+        cols,
+        lowCol,
+        highCol,
+        midCol: null,
+        maxRow: null,
+        left: null,
+        right: null,
+        result: null,
+        description: "No peak found (should not happen)",
+        pseudocodeLine: 9
       });
     }
 
@@ -136,13 +192,13 @@ const Search2DMatrix = () => {
   };
 
   useEffect(() => {
-    if (array.length > 0 && target !== null) {
-      const newSteps = generateSteps(array, target);
+    if (array.length > 0) {
+      const newSteps = generateSteps(array, rows, cols);
       setSteps(newSteps);
       setCurrentStep(0);
       setIsPlaying(false);
     }
-  }, [array, target]);
+  }, [array, rows, cols]);
 
   useEffect(() => {
     let timer;
@@ -152,57 +208,57 @@ const Search2DMatrix = () => {
     return () => clearTimeout(timer);
   }, [isPlaying, currentStep, speed, steps.length]);
 
-  // Helper to get background color for a cell at flattened index `idx`
-  const getBgColor = (idx) => {
-    const step = steps[currentStep];
-    if (!step) return 'bg-blue-500';
-    if (step.result === idx) return 'bg-green-600';
-    if (step.mid === idx) return 'bg-yellow-500';
-    return 'bg-blue-500';
-  };
+  const step = steps[currentStep] || {};
 
-  const getBorderStyle = (idx) => {
-    const step = steps[currentStep];
-    if (!step) return 'border-2 border-[#222222]';
-    // For 2D, we don't use low/high pointers as they are 1D indices
-    return 'border-2 border-[#222222]';
-  };
-
-  // Build matrix rows from flattened array
+  // Build matrix for display
   const matrix = [];
-  for (let i = 0; i < rows; i++) {
-    const row = array.slice(i * cols, i * cols + cols);
+  for (let r = 0; r < rows; r++) {
+    const row = array.slice(r * cols, r * cols + cols);
     matrix.push(row);
   }
 
-  const step = steps[currentStep] || {};
+  const getBgColor = (r, c) => {
+    if (!step.result && step.result !== null) return 'bg-blue-500';
+    if (step.result && step.result[0] === r && step.result[1] === c) return 'bg-green-600';
+    if (step.maxRow === r && step.midCol === c) return 'bg-yellow-500';
+    return 'bg-blue-500';
+  };
+
+  const getBorderStyle = (r, c) => {
+    // No low/high for 2D, just default border
+    return 'border-2 border-[#222222]';
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-[#0a0a0a] text-gray-200 rounded-2xl shadow-2xl transition-all duration-300 font-mono border border-[#222222]">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Search in a 2D Matrix</h2>
+        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Peak Element in 2D Matrix</h2>
         <div className="flex justify-center gap-4 mb-4">
-          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: <span className="text-[#4ec9b0]">O(log n)</span></span>
+          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: <span className="text-[#4ec9b0]">O(rows log cols)</span></span>
           <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">💾 Space: <span className="text-[#4ec9b0]">O(1)</span></span>
         </div>
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); updateInputs(); }} className="flex flex-wrap justify-center gap-4 mb-6">
         <div className="flex items-center gap-2">
-          <label className="text-[#9cdcfe]">Matrix (flattened, 3x4):</label>
+          <label className="text-[#9cdcfe]">Matrix (flattened):</label>
           <input type="text" value={arrayInput} onChange={(e) => setArrayInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-[#9cdcfe]">Target:</label>
-          <input type="number" value={targetInput} onChange={(e) => setTargetInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
+          <label className="text-[#9cdcfe]">Rows:</label>
+          <input type="number" min="1" value={rowsInput} onChange={(e) => setRowsInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-[#9cdcfe]">Cols:</label>
+          <input type="number" min="1" value={colsInput} onChange={(e) => setColsInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
         </div>
         <button type="submit" className="bg-[#0e639c] hover:bg-[#1177bb] text-white px-4 py-1 rounded">Update</button>
       </form>
 
       {steps.length > 0 && (
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left column: 2D matrix visualization */}
           <div className="lg:w-2/3 space-y-6">
+            {/* 2D grid display */}
             <div className="flex flex-col items-center gap-2">
               {/* Column indices */}
               <div className="flex ml-8">
@@ -215,26 +271,23 @@ const Search2DMatrix = () => {
               {matrix.map((row, ri) => (
                 <div key={`row-${ri}`} className="flex items-center gap-2">
                   <div className="w-8 text-[#ce9178] text-xs">r{ri}</div>
-                  {row.map((num, ci) => {
-                    const flatIdx = ri * cols + ci;
-                    return (
-                      <div
-                        key={`cell-${ri}-${ci}`}
-                        className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor(flatIdx)} ${getBorderStyle(flatIdx)}`}
-                      >
-                        {num}
-                      </div>
-                    );
-                  })}
+                  {row.map((num, ci) => (
+                    <div
+                      key={`cell-${ri}-${ci}`}
+                      className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor(ri, ci)} ${getBorderStyle(ri, ci)}`}
+                    >
+                      {num}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
 
             {/* Legend */}
             <div className="flex justify-center gap-6 flex-wrap text-sm">
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-500 rounded-full"></span>Not examined</div>
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-500 rounded-full"></span>Mid (current)</div>
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-600 rounded-full"></span>Found</div>
+              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-500 rounded-full"></span>Not peak</div>
+              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-500 rounded-full"></span>Current max in column</div>
+              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-600 rounded-full"></span>Peak found</div>
             </div>
 
             {/* Description */}
@@ -242,9 +295,14 @@ const Search2DMatrix = () => {
               <p className="text-gray-300">
                 <span className="font-bold text-[#9cdcfe]">Step {currentStep + 1}:</span> {step.description}
               </p>
-              {step.low !== undefined && step.high !== undefined && (
+              {step.lowCol !== undefined && step.highCol !== undefined && (
                 <p className="text-sm text-gray-400 mt-1">
-                  low = {step.low}, high = {step.high}
+                  lowCol = {step.lowCol}, highCol = {step.highCol}
+                </p>
+              )}
+              {step.left !== undefined && step.left !== null && (
+                <p className="text-sm text-gray-400">
+                  left = {step.left === -Infinity ? '-∞' : step.left}, right = {step.right === -Infinity ? '-∞' : step.right}
                 </p>
               )}
             </div>
@@ -277,7 +335,7 @@ const Search2DMatrix = () => {
             </div>
           </div>
 
-          {/* Right column: Pseudocode */}
+          {/* Pseudocode */}
           <div className="lg:w-1/3 bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 font-mono text-sm shadow-inner">
             <h3 className="text-lg font-bold text-[#569cd6] mb-4">📝 Pseudocode</h3>
             <div className="space-y-1">
@@ -292,4 +350,4 @@ const Search2DMatrix = () => {
   );
 };
 
-export default Search2DMatrix;
+export default PeakElement2D;

@@ -1,148 +1,183 @@
 import React, { useState, useEffect } from 'react';
 
-const Search2DMatrix = () => {
+const MatrixMedian = () => {
   const pseudocodeLines = [
-    "procedure searchMatrix(matrix, target):",
-    "  rows = length(matrix), cols = length(matrix[0])",
-    "  low = 0, high = rows * cols - 1",
+    "procedure matrixMedian(matrix):",
+    "  rows = len(matrix), cols = len(matrix[0])",
+    "  low = min(matrix), high = max(matrix)",
+    "  desired = floor((rows * cols) / 2)",
     "  while low <= high:",
     "    mid = floor((low + high) / 2)",
-    "    r = mid // cols",
-    "    c = mid % cols",
-    "    if matrix[r][c] == target: return true",
-    "    else if matrix[r][c] < target: low = mid + 1",
+    "    count = 0",
+    "    for each row:",
+    "      count += number of elements <= mid in row (using binary search)",
+    "    if count <= desired: low = mid + 1",
     "    else: high = mid - 1",
-    "  return false"
+    "  return low"
   ];
 
-  // Fixed 3x4 matrix (flattened input)
-  const defaultArrayInput = '1,3,5,7,10,11,16,20,23,30,34,60';
-  const defaultTargetInput = '3';
+  // Fixed 3x3 row-wise sorted matrix
+  const defaultArrayInput = '1,3,5,2,6,9,3,6,9';
+  const defaultRows = 3;
+  const defaultCols = 3;
 
   const [arrayInput, setArrayInput] = useState(defaultArrayInput);
-  const [targetInput, setTargetInput] = useState(defaultTargetInput);
+  const [rowsInput, setRowsInput] = useState(defaultRows.toString());
+  const [colsInput, setColsInput] = useState(defaultCols.toString());
   const [array, setArray] = useState([]);
-  const [target, setTarget] = useState(null);
+  const [rows, setRows] = useState(defaultRows);
+  const [cols, setCols] = useState(defaultCols);
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
 
-  // Matrix dimensions (fixed 3x4)
-  const rows = 3;
-  const cols = 4;
-
   const updateInputs = () => {
     const arrStr = arrayInput.split(',').map(s => s.trim()).filter(s => s !== '');
     const newArray = arrStr.map(Number).filter(n => !isNaN(n));
-    const newTarget = Number(targetInput);
-    if (newArray.length === 0 || isNaN(newTarget)) return;
+    const newRows = parseInt(rowsInput);
+    const newCols = parseInt(colsInput);
+    if (newArray.length !== newRows * newCols) {
+      alert(`Array must have exactly ${newRows * newCols} numbers.`);
+      return;
+    }
     setArray(newArray);
-    setTarget(newTarget);
+    setRows(newRows);
+    setCols(newCols);
   };
 
-  const generateSteps = (arr, target) => {
+  const generateSteps = (arr, rows, cols) => {
     const steps = [];
-    let low = 0;
-    let high = arr.length - 1;
-    let found = false;
+    const matrix = [];
+    for (let r = 0; r < rows; r++) {
+      matrix.push(arr.slice(r * cols, r * cols + cols));
+    }
+
+    let low = Math.min(...arr);
+    let high = Math.max(...arr);
+    const desired = Math.floor((rows * cols) / 2);
+    let result = null;
 
     steps.push({
-      array: [...arr],
+      array: arr,
+      rows,
+      cols,
       low,
       high,
       mid: null,
+      count: null,
+      desired,
       result: null,
-      description: `2D matrix: ${rows}x${cols}. Search for ${target}`,
+      description: `Find median of ${rows}x${cols} matrix. desired = ${desired}`,
       pseudocodeLine: 1
     });
 
     while (low <= high) {
       const mid = Math.floor((low + high) / 2);
-      const r = Math.floor(mid / cols);
-      const c = mid % cols;
+      let count = 0;
+      for (let r = 0; r < rows; r++) {
+        // binary search in each row to count numbers <= mid
+        const row = matrix[r];
+        let left = 0, right = cols - 1;
+        while (left <= right) {
+          const midIdx = Math.floor((left + right) / 2);
+          if (row[midIdx] <= mid) {
+            left = midIdx + 1;
+          } else {
+            right = midIdx - 1;
+          }
+        }
+        count += left; // left is the count of elements <= mid
+      }
       steps.push({
-        array: [...arr],
+        array: arr,
+        rows,
+        cols,
         low,
         high,
         mid,
+        count,
+        desired,
         result: null,
-        description: `mid = ${mid} → row ${r}, col ${c} = ${arr[mid]}`,
+        description: `mid = ${mid}, count ≤ mid = ${count} (need ≤ ${desired} for left side)`,
         pseudocodeLine: 4
       });
 
-      if (arr[mid] === target) {
-        found = true;
-        steps.push({
-          array: [...arr],
-          low,
-          high,
-          mid,
-          result: mid,
-          description: `Found ${target} at index ${mid} (row ${r}, col ${c})! 🎉`,
-          pseudocodeLine: 5
-        });
-        break;
-      } else if (arr[mid] < target) {
+      if (count <= desired) {
         low = mid + 1;
         steps.push({
-          array: [...arr],
+          array: arr,
+          rows,
+          cols,
           low,
           high,
           mid,
+          count,
+          desired,
           result: null,
-          description: `${arr[mid]} < ${target} → search right half, low = ${low}`,
+          description: `count ≤ desired → median is larger, low = ${low}`,
           pseudocodeLine: 6
         });
       } else {
         high = mid - 1;
         steps.push({
-          array: [...arr],
+          array: arr,
+          rows,
+          cols,
           low,
           high,
           mid,
+          count,
+          desired,
           result: null,
-          description: `${arr[mid]} > ${target} → search left half, high = ${high}`,
+          description: `count > desired → median is smaller, high = ${high}`,
           pseudocodeLine: 7
         });
       }
 
-      if (low <= high && !found) {
+      if (low <= high) {
         steps.push({
-          array: [...arr],
+          array: arr,
+          rows,
+          cols,
           low,
           high,
           mid: null,
+          count: null,
+          desired,
           result: null,
-          description: `Now search in [${low}, ${high}]`,
-          pseudocodeLine: 2
+          description: `Now search value in [${low}, ${high}]`,
+          pseudocodeLine: 3
         });
       }
     }
 
-    if (!found) {
-      steps.push({
-        array: [...arr],
-        low,
-        high,
-        mid: null,
-        result: -1,
-        description: `${target} not found in matrix.`,
-        pseudocodeLine: 8
-      });
-    }
+    result = low; // low is the median after loop
+    steps.push({
+      array: arr,
+      rows,
+      cols,
+      low,
+      high,
+      mid: null,
+      count: null,
+      desired,
+      result,
+      description: `Median = ${result}`,
+      pseudocodeLine: 8
+    });
 
     return steps;
   };
 
   useEffect(() => {
-    if (array.length > 0 && target !== null) {
-      const newSteps = generateSteps(array, target);
+    if (array.length > 0) {
+      const newSteps = generateSteps(array, rows, cols);
       setSteps(newSteps);
       setCurrentStep(0);
       setIsPlaying(false);
     }
-  }, [array, target]);
+  }, [array, rows, cols]);
 
   useEffect(() => {
     let timer;
@@ -152,57 +187,50 @@ const Search2DMatrix = () => {
     return () => clearTimeout(timer);
   }, [isPlaying, currentStep, speed, steps.length]);
 
-  // Helper to get background color for a cell at flattened index `idx`
-  const getBgColor = (idx) => {
-    const step = steps[currentStep];
-    if (!step) return 'bg-blue-500';
-    if (step.result === idx) return 'bg-green-600';
-    if (step.mid === idx) return 'bg-yellow-500';
-    return 'bg-blue-500';
-  };
+  const step = steps[currentStep] || {};
 
-  const getBorderStyle = (idx) => {
-    const step = steps[currentStep];
-    if (!step) return 'border-2 border-[#222222]';
-    // For 2D, we don't use low/high pointers as they are 1D indices
-    return 'border-2 border-[#222222]';
-  };
-
-  // Build matrix rows from flattened array
+  // Build matrix for display
   const matrix = [];
-  for (let i = 0; i < rows; i++) {
-    const row = array.slice(i * cols, i * cols + cols);
+  for (let r = 0; r < rows; r++) {
+    const row = array.slice(r * cols, r * cols + cols);
     matrix.push(row);
   }
 
-  const step = steps[currentStep] || {};
+  // For simplicity, we just display the matrix, no cell-specific highlighting.
+  // The focus is on the binary search on value range, not on individual cells.
+  const getBgColor = () => 'bg-blue-500';
+  const getBorderStyle = () => 'border-2 border-[#222222]';
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-[#0a0a0a] text-gray-200 rounded-2xl shadow-2xl transition-all duration-300 font-mono border border-[#222222]">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Search in a 2D Matrix</h2>
+        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Median of Row-wise Sorted Matrix</h2>
         <div className="flex justify-center gap-4 mb-4">
-          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: <span className="text-[#4ec9b0]">O(log n)</span></span>
+          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: <span className="text-[#4ec9b0]">O(rows log cols log range)</span></span>
           <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">💾 Space: <span className="text-[#4ec9b0]">O(1)</span></span>
         </div>
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); updateInputs(); }} className="flex flex-wrap justify-center gap-4 mb-6">
         <div className="flex items-center gap-2">
-          <label className="text-[#9cdcfe]">Matrix (flattened, 3x4):</label>
+          <label className="text-[#9cdcfe]">Matrix (flattened, row-wise sorted):</label>
           <input type="text" value={arrayInput} onChange={(e) => setArrayInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-[#9cdcfe]">Target:</label>
-          <input type="number" value={targetInput} onChange={(e) => setTargetInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
+          <label className="text-[#9cdcfe]">Rows:</label>
+          <input type="number" min="1" value={rowsInput} onChange={(e) => setRowsInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-[#9cdcfe]">Cols:</label>
+          <input type="number" min="1" value={colsInput} onChange={(e) => setColsInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
         </div>
         <button type="submit" className="bg-[#0e639c] hover:bg-[#1177bb] text-white px-4 py-1 rounded">Update</button>
       </form>
 
       {steps.length > 0 && (
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left column: 2D matrix visualization */}
           <div className="lg:w-2/3 space-y-6">
+            {/* 2D grid display */}
             <div className="flex flex-col items-center gap-2">
               {/* Column indices */}
               <div className="flex ml-8">
@@ -215,26 +243,21 @@ const Search2DMatrix = () => {
               {matrix.map((row, ri) => (
                 <div key={`row-${ri}`} className="flex items-center gap-2">
                   <div className="w-8 text-[#ce9178] text-xs">r{ri}</div>
-                  {row.map((num, ci) => {
-                    const flatIdx = ri * cols + ci;
-                    return (
-                      <div
-                        key={`cell-${ri}-${ci}`}
-                        className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor(flatIdx)} ${getBorderStyle(flatIdx)}`}
-                      >
-                        {num}
-                      </div>
-                    );
-                  })}
+                  {row.map((num, ci) => (
+                    <div
+                      key={`cell-${ri}-${ci}`}
+                      className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor()} ${getBorderStyle()}`}
+                    >
+                      {num}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
 
             {/* Legend */}
             <div className="flex justify-center gap-6 flex-wrap text-sm">
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-500 rounded-full"></span>Not examined</div>
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-500 rounded-full"></span>Mid (current)</div>
-              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-600 rounded-full"></span>Found</div>
+              <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-500 rounded-full"></span>Element</div>
             </div>
 
             {/* Description */}
@@ -245,6 +268,16 @@ const Search2DMatrix = () => {
               {step.low !== undefined && step.high !== undefined && (
                 <p className="text-sm text-gray-400 mt-1">
                   low = {step.low}, high = {step.high}
+                </p>
+              )}
+              {step.count !== null && (
+                <p className="text-sm text-gray-400">
+                  count = {step.count} (desired = {step.desired})
+                </p>
+              )}
+              {step.result !== null && (
+                <p className="text-sm text-[#4ec9b0] font-bold mt-2">
+                  Median = {step.result}
                 </p>
               )}
             </div>
@@ -277,7 +310,7 @@ const Search2DMatrix = () => {
             </div>
           </div>
 
-          {/* Right column: Pseudocode */}
+          {/* Pseudocode */}
           <div className="lg:w-1/3 bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 font-mono text-sm shadow-inner">
             <h3 className="text-lg font-bold text-[#569cd6] mb-4">📝 Pseudocode</h3>
             <div className="space-y-1">
@@ -292,4 +325,4 @@ const Search2DMatrix = () => {
   );
 };
 
-export default Search2DMatrix;
+export default MatrixMedian;
