@@ -1,7 +1,7 @@
 # DSA Visualizer
 
 An interactive web application to visualize core Data Structures and Algorithms 
-such as arrays, stacks, queues, trees, and graphs to help students understand 
+such as arrays, stacks, queues, trees, and graphs to help students understand
 algorithmic logic step by step.
 
 ## Tech Stack
