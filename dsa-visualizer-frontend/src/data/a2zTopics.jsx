@@ -189,7 +189,7 @@ const topics = [
         name: 'BS on 2D Arrays',
         problems: [
           { id: 'search-2d-matrix', name: 'Search in a 2D matrix', visualizable: true },
-          { id: 'find-peak-2d', name: 'Find peak element in 2D matrix', visualizable: true },
+          { id: 'peak-element-2d', name: 'Find peak element in 2D matrix', visualizable: true },
           { id: 'matrix-median', name: 'Median of a row-wise sorted matrix', visualizable: true }
         ]
       },

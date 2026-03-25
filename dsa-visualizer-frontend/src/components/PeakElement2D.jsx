@@ -18,7 +18,6 @@ const PeakElement2D = () => {
     "  return (-1, -1)"
   ];
 
-  // Fixed 4x4 matrix (flattened)
   const defaultArrayInput = '10,20,15,12,21,30,14,13,7,9,25,18,8,11,23,22';
   const defaultRows = 4;
   const defaultCols = 4;
@@ -49,10 +48,101 @@ const PeakElement2D = () => {
   };
 
   const generateSteps = (arr, rows, cols) => {
-    const steps = [];
-    let lowCol = 0;
-    let highCol = cols - 1;
-    let resultRow = -1, resultCol = -1;
+  const steps = [];
+  let lowCol = 0;
+  let highCol = cols - 1;
+  let resultRow = -1, resultCol = -1;
+
+  steps.push({
+    array: arr,
+    rows,
+    cols,
+    lowCol,
+    highCol,
+    midCol: null,
+    maxRow: null,
+    left: null,
+    right: null,
+    result: null,
+    description: `Search for a peak in ${rows}x${cols} matrix. Column range: [${lowCol}, ${highCol}]`,
+    pseudocodeLine: 1
+  });
+
+  while (lowCol <= highCol) {
+    const midCol = Math.floor((lowCol + highCol) / 2);
+    
+    steps.push({
+      array: arr,
+      rows,
+      cols,
+      lowCol,
+      highCol,
+      midCol,
+      maxRow: null,
+      left: null,
+      right: null,
+      result: null,
+      description: `Select middle column: midCol = ${midCol}`,
+      pseudocodeLine: 3
+    });
+
+    // Find row with maximum value in this column
+    let maxRow = 0;
+    let maxVal = arr[maxRow * cols + midCol];
+    steps.push({
+      array: arr,
+      rows,
+      cols,
+      lowCol,
+      highCol,
+      midCol,
+      maxRow: null,
+      left: null,
+      right: null,
+      result: null,
+      description: `Find maximum element in column ${midCol}: start at row 0 (value ${maxVal})`,
+      pseudocodeLine: 4
+    });
+
+    for (let r = 1; r < rows; r++) {
+      const val = arr[r * cols + midCol];
+      steps.push({
+        array: arr,
+        rows,
+        cols,
+        lowCol,
+        highCol,
+        midCol,
+        maxRow,
+        left: null,
+        right: null,
+        result: null,
+        description: `Check row ${r}: value = ${val} (current max = ${maxVal})`,
+        pseudocodeLine: 4
+      });
+      if (val > maxVal) {
+        maxVal = val;
+        maxRow = r;
+        steps.push({
+          array: arr,
+          rows,
+          cols,
+          lowCol,
+          highCol,
+          midCol,
+          maxRow,
+          left: null,
+          right: null,
+          result: null,
+          description: `New max at row ${maxRow} with value ${maxVal}`,
+          pseudocodeLine: 4
+        });
+      }
+    }
+
+    const left = midCol > 0 ? arr[maxRow * cols + (midCol - 1)] : -Infinity;
+    const right = midCol < cols - 1 ? arr[maxRow * cols + (midCol + 1)] : -Infinity;
+    const current = arr[maxRow * cols + midCol];
 
     steps.push({
       array: arr,
@@ -60,32 +150,35 @@ const PeakElement2D = () => {
       cols,
       lowCol,
       highCol,
-      midCol: null,
-      maxRow: null,
-      left: null,
-      right: null,
+      midCol,
+      maxRow,
+      left,
+      right,
       result: null,
-      description: `Find a peak in ${rows}x${cols} matrix`,
-      pseudocodeLine: 1
+      description: `Maximum in column ${midCol} is at (${maxRow}, ${midCol}) = ${current}. Left neighbor = ${left === -Infinity ? 'none' : left}, right neighbor = ${right === -Infinity ? 'none' : right}`,
+      pseudocodeLine: 5
     });
 
-    while (lowCol <= highCol) {
-      const midCol = Math.floor((lowCol + highCol) / 2);
-      // Find row with maximum value in this column
-      let maxRow = 0;
-      let maxVal = arr[maxRow * cols + midCol];
-      for (let r = 1; r < rows; r++) {
-        const val = arr[r * cols + midCol];
-        if (val > maxVal) {
-          maxVal = val;
-          maxRow = r;
-        }
-      }
-
-      const left = midCol > 0 ? arr[maxRow * cols + (midCol - 1)] : -Infinity;
-      const right = midCol < cols - 1 ? arr[maxRow * cols + (midCol + 1)] : -Infinity;
-      const current = arr[maxRow * cols + midCol];
-
+    if (current > left && current > right) {
+      resultRow = maxRow;
+      resultCol = midCol;
+      steps.push({
+        array: arr,
+        rows,
+        cols,
+        lowCol,
+        highCol,
+        midCol,
+        maxRow,
+        left,
+        right,
+        result: [resultRow, resultCol],
+        description: `Peak found at (${resultRow}, ${resultCol}) = ${current} 🎉`,
+        pseudocodeLine: 6
+      });
+      break;
+    } else if (left > current) {
+      highCol = midCol - 1;
       steps.push({
         array: arr,
         rows,
@@ -97,81 +190,28 @@ const PeakElement2D = () => {
         left,
         right,
         result: null,
-        description: `midCol = ${midCol}, max in column at row ${maxRow} (value ${current})`,
-        pseudocodeLine: 3
+        description: `Left neighbor ${left} > ${current} → peak must be in left half. Update highCol = ${highCol}`,
+        pseudocodeLine: 8
       });
-
-      if (current > left && current > right) {
-        resultRow = maxRow;
-        resultCol = midCol;
-        steps.push({
-          array: arr,
-          rows,
-          cols,
-          lowCol,
-          highCol,
-          midCol,
-          maxRow,
-          left,
-          right,
-          result: [resultRow, resultCol],
-          description: `Peak found at (${resultRow}, ${resultCol}) = ${current} 🎉`,
-          pseudocodeLine: 5
-        });
-        break;
-      } else if (left > current) {
-        highCol = midCol - 1;
-        steps.push({
-          array: arr,
-          rows,
-          cols,
-          lowCol,
-          highCol,
-          midCol,
-          maxRow,
-          left,
-          right,
-          result: null,
-          description: `left neighbor ${left} > ${current} → search left, highCol = ${highCol}`,
-          pseudocodeLine: 7
-        });
-      } else {
-        lowCol = midCol + 1;
-        steps.push({
-          array: arr,
-          rows,
-          cols,
-          lowCol,
-          highCol,
-          midCol,
-          maxRow,
-          left,
-          right,
-          result: null,
-          description: `right neighbor ${right} > ${current} → search right, lowCol = ${lowCol}`,
-          pseudocodeLine: 8
-        });
-      }
-
-      if (lowCol <= highCol && resultRow === -1) {
-        steps.push({
-          array: arr,
-          rows,
-          cols,
-          lowCol,
-          highCol,
-          midCol: null,
-          maxRow: null,
-          left: null,
-          right: null,
-          result: null,
-          description: `Now search columns [${lowCol}, ${highCol}]`,
-          pseudocodeLine: 2
-        });
-      }
+    } else {
+      lowCol = midCol + 1;
+      steps.push({
+        array: arr,
+        rows,
+        cols,
+        lowCol,
+        highCol,
+        midCol,
+        maxRow,
+        left,
+        right,
+        result: null,
+        description: `Right neighbor ${right} > ${current} → peak must be in right half. Update lowCol = ${lowCol}`,
+        pseudocodeLine: 9
+      });
     }
 
-    if (resultRow === -1) {
+    if (lowCol <= highCol && resultRow === -1) {
       steps.push({
         array: arr,
         rows,
@@ -183,13 +223,31 @@ const PeakElement2D = () => {
         left: null,
         right: null,
         result: null,
-        description: "No peak found (should not happen)",
-        pseudocodeLine: 9
+        description: `Continue searching in column range [${lowCol}, ${highCol}]`,
+        pseudocodeLine: 2
       });
     }
+  }
 
-    return steps;
-  };
+  if (resultRow === -1) {
+    steps.push({
+      array: arr,
+      rows,
+      cols,
+      lowCol,
+      highCol,
+      midCol: null,
+      maxRow: null,
+      left: null,
+      right: null,
+      result: null,
+      description: "No peak found (should not happen)",
+      pseudocodeLine: 10
+    });
+  }
+
+  return steps;
+};
 
   useEffect(() => {
     if (array.length > 0) {
@@ -218,16 +276,12 @@ const PeakElement2D = () => {
   }
 
   const getBgColor = (r, c) => {
-    if (!step.result && step.result !== null) return 'bg-blue-500';
     if (step.result && step.result[0] === r && step.result[1] === c) return 'bg-green-600';
     if (step.maxRow === r && step.midCol === c) return 'bg-yellow-500';
     return 'bg-blue-500';
   };
 
-  const getBorderStyle = (r, c) => {
-    // No low/high for 2D, just default border
-    return 'border-2 border-[#222222]';
-  };
+  const getBorderStyle = () => 'border-2 border-[#222222]';
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-[#0a0a0a] text-gray-200 rounded-2xl shadow-2xl transition-all duration-300 font-mono border border-[#222222]">
@@ -258,7 +312,6 @@ const PeakElement2D = () => {
       {steps.length > 0 && (
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3 space-y-6">
-            {/* 2D grid display */}
             <div className="flex flex-col items-center gap-2">
               {/* Column indices */}
               <div className="flex ml-8">
@@ -274,7 +327,7 @@ const PeakElement2D = () => {
                   {row.map((num, ci) => (
                     <div
                       key={`cell-${ri}-${ci}`}
-                      className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor(ri, ci)} ${getBorderStyle(ri, ci)}`}
+                      className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${getBgColor(ri, ci)} ${getBorderStyle()}`}
                     >
                       {num}
                     </div>
@@ -283,14 +336,12 @@ const PeakElement2D = () => {
               ))}
             </div>
 
-            {/* Legend */}
             <div className="flex justify-center gap-6 flex-wrap text-sm">
               <div className="flex items-center gap-2"><span className="w-4 h-4 bg-blue-500 rounded-full"></span>Not peak</div>
               <div className="flex items-center gap-2"><span className="w-4 h-4 bg-yellow-500 rounded-full"></span>Current max in column</div>
               <div className="flex items-center gap-2"><span className="w-4 h-4 bg-green-600 rounded-full"></span>Peak found</div>
             </div>
 
-            {/* Description */}
             <div className="bg-[#0d0d0d] p-4 rounded-lg border-l-4 border-[#569cd6]">
               <p className="text-gray-300">
                 <span className="font-bold text-[#9cdcfe]">Step {currentStep + 1}:</span> {step.description}
@@ -307,7 +358,6 @@ const PeakElement2D = () => {
               )}
             </div>
 
-            {/* Progress */}
             <div>
               <div className="flex justify-between text-sm text-gray-400 mb-1">
                 <span>Progress</span>
@@ -319,14 +369,12 @@ const PeakElement2D = () => {
               <div className="text-center text-xs text-gray-500 mt-1">Step {currentStep + 1} of {steps.length}</div>
             </div>
 
-            {/* Speed control */}
             <div className="flex items-center justify-center gap-4 bg-[#0d0d0d] p-3 rounded-lg">
               <span>⏱️ Speed:</span>
               <input type="range" min="300" max="2000" value={speed} onChange={(e) => setSpeed(e.target.value)} className="w-48 md:w-64 accent-[#4ec9b0]" />
               <span className="bg-[#1a1a1a] px-3 py-1 rounded-full">{speed}ms</span>
             </div>
 
-            {/* Buttons */}
             <div className="flex justify-center gap-4 flex-wrap">
               <button onClick={() => { setCurrentStep(Math.max(0, currentStep-1)); setIsPlaying(false); }} disabled={currentStep===0} className={`px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 ${currentStep===0 ? 'bg-[#1a1a1a] text-gray-500 cursor-not-allowed' : 'bg-[#0e639c] hover:bg-[#1177bb] text-white'}`}>← Prev</button>
               <button onClick={() => { setCurrentStep(0); setIsPlaying(false); }} className="px-6 py-3 bg-[#c2410c] hover:bg-[#b91c1c] text-white rounded-lg font-semibold hover:scale-105">Reset</button>
@@ -335,7 +383,6 @@ const PeakElement2D = () => {
             </div>
           </div>
 
-          {/* Pseudocode */}
           <div className="lg:w-1/3 bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 font-mono text-sm shadow-inner">
             <h3 className="text-lg font-bold text-[#569cd6] mb-4">📝 Pseudocode</h3>
             <div className="space-y-1">

@@ -19,15 +19,15 @@ import PeakElement from './PeakElement';
 import Search2DMatrix from './Search2DMatrix';
 import SquareRoot from './SquareRoot';
 import KokoBananas from './KokoBananas';
+import Bouquets from './Bouquets';
 import ShipCapacity from './ShipCapacity';
 import KthMissing from './KthMissing';
 import AggressiveCows from './AggressiveCows';
 import BookAllocation from './BookAllocation';
-import SplitArrayLargestSum from './SplitArrayLargestSum'
+import SplitArrayLargestSum from './SplitArrayLargestSum';
 import MedianTwoArrays from './MedianTwoArrays';
 import KthTwoArrays from './KthTwoArrays';
 import GasStations from './GasStations';
-import Bouquets from './Bouquets';
 import PeakElement2D from './PeakElement2D';
 import MatrixMedian from './MatrixMedian';
 
@@ -56,6 +56,7 @@ const componentMap = {
   'matrix-median': MatrixMedian,
   'sqrt': SquareRoot,
   'koko-eating-bananas': KokoBananas,
+  'minimum-days-bouquets': Bouquets,
   'ship-capacity': ShipCapacity,
   'kth-missing': KthMissing,
   'aggressive-cows': AggressiveCows,
@@ -64,7 +65,6 @@ const componentMap = {
   'median-two-arrays': MedianTwoArrays,
   'kth-two-arrays': KthTwoArrays,
   'gas-stations': GasStations,
-  'bouquets': Bouquets,  
 };
 
 const VisualizationRenderer = ({ algorithm }) => {

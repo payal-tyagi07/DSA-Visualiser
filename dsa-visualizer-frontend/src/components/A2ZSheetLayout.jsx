@@ -15,9 +15,8 @@ const A2ZSheetLayout = () => {
 
   return (
     <div className="flex h-full bg-[#0a0a0a] text-gray-300 font-mono">
-      {/* Sidebar – ultra‑dark with enhanced colors */}
+      {/* Sidebar – scrollable */}
       <div className="w-80 bg-[#111111] border-r border-[#222222] overflow-y-auto">
-        {/* Header section */}
         <div className="p-4 bg-[#0d0d0d] border-b border-[#222222]">
           <h2 className="text-lg font-bold text-[#9cdcfe] flex items-center gap-2">
             <span>📚</span> DSA SHEET
@@ -25,11 +24,9 @@ const A2ZSheetLayout = () => {
           <p className="text-xs text-[#6a9955] mt-1">Visualize Your Code</p>
         </div>
 
-        {/* Topics list */}
         <div className="p-2">
           {topics.map((topic) => (
             <div key={topic.id} className="mb-2">
-              {/* Topic header */}
               <button
                 onClick={() => toggleTopic(topic.id)}
                 className="w-full text-left p-2 bg-[#0d0d0d] hover:bg-[#1a1a1a] rounded flex justify-between items-center transition-colors border border-transparent hover:border-[#333333]"
@@ -40,7 +37,6 @@ const A2ZSheetLayout = () => {
                 </span>
               </button>
 
-              {/* Subtopics (expandable) */}
               {expandedTopics[topic.id] && (
                 <div className="ml-4 mt-1 space-y-1">
                   {topic.subtopics.map((subtopic) => (
@@ -79,7 +75,7 @@ const A2ZSheetLayout = () => {
         </div>
       </div>
 
-      {/* Main content area – unchanged */}
+      {/* Main content – scrollable independently */}
       <div className="flex-1 overflow-y-auto bg-[#0a0a0a] p-4">
         {selectedAlgorithm ? (
           <VisualizationRenderer algorithm={selectedAlgorithm} />
@@ -88,7 +84,7 @@ const A2ZSheetLayout = () => {
             <div className="text-center">
               <div className="text-6xl mb-4 opacity-10">{'{ }'}</div>
               <h3 className="text-2xl font-bold text-[#9cdcfe] mb-2">Welcome to DSA Visualizer</h3>
-              <p className="text-sm">Select an algorithm from the A2Z sheet to begin</p>
+              <p className="text-sm">Select an algorithm from the DSA sheet to begin</p>
             </div>
           </div>
         )}
