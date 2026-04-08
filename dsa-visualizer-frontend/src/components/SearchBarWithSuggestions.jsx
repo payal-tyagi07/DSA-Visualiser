@@ -46,7 +46,7 @@ const SearchBarWithSuggestions = ({ onSelectAlgorithm, placeholder, compact = fa
           type="text"
           value={query}
           onChange={handleInputChange}
-          placeholder={placeholder || "Search algorithm... (e.g., 'bubble sort', 'binary search')"}
+          placeholder={placeholder || "Search algorithm"}
           className={`w-full bg-[#1e1e1e] border border-[#3c3c3c] rounded-2xl px-4 py-2 pr-10 text-gray-200 focus:outline-none focus:border-[#569cd6] focus:ring-1 focus:ring-[#569cd6] ${compact ? 'text-sm py-1.5' : 'text-lg py-3'}`}
         />
         <button
