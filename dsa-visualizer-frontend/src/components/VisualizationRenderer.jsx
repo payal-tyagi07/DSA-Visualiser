@@ -1,13 +1,14 @@
+// src/components/VisualizationRenderer.jsx
 import React from 'react';
 
-// Import sorting components (if not already imported elsewhere)
+// ---------- Sorting ----------
 import BubbleSortEnhanced from './BubbleSortEnhanced';
 import SelectionSort from './SelectionSort';
 import InsertionSort from './InsertionSort';
 import MergeSort from './MergeSort';
 import QuickSort from './QuickSort';
 
-// Import binary search components
+// ---------- Binary Search (1D) ----------
 import BinarySearch from './BinarySearch';
 import LowerBoundSearch from './LowerBoundSearch';
 import UpperBoundSearch from './UpperBoundSearch';
@@ -16,22 +17,54 @@ import SearchRotated from './SearchRotated';
 import FindMinRotated from './FindMinRotated';
 import SingleElementSorted from './SingleElementSorted';
 import PeakElement from './PeakElement';
+
+// ---------- Binary Search (2D) ----------
 import Search2DMatrix from './Search2DMatrix';
+import PeakElement2D from './PeakElement2D';
+import MatrixMedian from './MatrixMedian';
+
+// ---------- Binary Search (Answer Concept) ----------
 import SquareRoot from './SquareRoot';
 import KokoBananas from './KokoBananas';
-import Bouquets from './Bouquets';
 import ShipCapacity from './ShipCapacity';
 import KthMissing from './KthMissing';
 import AggressiveCows from './AggressiveCows';
 import BookAllocation from './BookAllocation';
 import SplitArrayLargestSum from './SplitArrayLargestSum';
+import GasStations from './GasStations';
+import Bouquets from './Bouquets';
 import MedianTwoArrays from './MedianTwoArrays';
 import KthTwoArrays from './KthTwoArrays';
-import GasStations from './GasStations';
-import PeakElement2D from './PeakElement2D';
-import MatrixMedian from './MatrixMedian';
 
-// Map algorithm IDs to their components
+// ---------- Strings ----------
+import ReverseString from './ReverseString';
+// New string algorithms (if you create them, import here)
+// import ValidParentheses from './ValidParentheses'; // already below
+
+// ---------- Linked List ----------
+import ReverseLinkedList from './ReverseLinkedList';
+import DetectCycle from './DetectCycle';
+
+// ---------- Recursion ----------
+import Factorial from './Factorial';
+import Fibonacci from './Fibonacci';
+import ClimbingStairs from './ClimbingStairs';
+
+// ---------- Array Algorithms (New) ----------
+import TwoSum from './TwoSum';
+import Kadane from './Kadane';
+import MajorityElement from './MajorityElement';
+
+// ---------- Stack ----------
+import ValidParentheses from './ValidParentheses';
+
+// ---------- Tree ----------
+import InorderTraversal from './InorderTraversal';
+
+// ---------- Graph ----------
+import BFS from './BFS';
+
+// ---------- Component Map ----------
 const componentMap = {
   // Sorting
   'bubble-sort': BubbleSortEnhanced,
@@ -40,7 +73,7 @@ const componentMap = {
   'merge-sort': MergeSort,
   'quick-sort': QuickSort,
 
-  // Binary search (basic)
+  // Binary Search (1D)
   'binary-search': BinarySearch,
   'lower-bound': LowerBoundSearch,
   'upper-bound': UpperBoundSearch,
@@ -50,21 +83,47 @@ const componentMap = {
   'single-element': SingleElementSorted,
   'peak-element': PeakElement,
 
-  // Binary search on 2D & answer concept
+  // Binary Search (2D)
   'search-2d-matrix': Search2DMatrix,
   'peak-element-2d': PeakElement2D,
   'matrix-median': MatrixMedian,
+
+  // Binary Search (Answer Concept)
   'sqrt': SquareRoot,
   'koko-eating-bananas': KokoBananas,
-  'minimum-days-bouquets': Bouquets,
   'ship-capacity': ShipCapacity,
   'kth-missing': KthMissing,
   'aggressive-cows': AggressiveCows,
   'book-allocation': BookAllocation,
   'split-array': SplitArrayLargestSum,
+  'gas-stations': GasStations,
+  'minimum-days-bouquets': Bouquets,
   'median-two-arrays': MedianTwoArrays,
   'kth-two-arrays': KthTwoArrays,
-  'gas-stations': GasStations,
+
+  // Strings
+  'reverse-string': ReverseString,
+  'valid-parentheses': ValidParentheses,
+
+  // Linked List
+  'reverse-linked-list': ReverseLinkedList,
+  'detect-cycle': DetectCycle,
+
+  // Recursion & DP
+  'factorial': Factorial,
+  'fibonacci': Fibonacci,
+  'climbing-stairs': ClimbingStairs,
+
+  // Array Algorithms
+  '2sum': TwoSum,
+  'kadane': Kadane,
+  'majority-element': MajorityElement,
+
+  // Tree
+  'inorder-traversal': InorderTraversal,
+
+  // Graph
+  'bfs': BFS,
 };
 
 const VisualizationRenderer = ({ algorithm }) => {
