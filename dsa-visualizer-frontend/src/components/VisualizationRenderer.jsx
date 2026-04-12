@@ -8,6 +8,30 @@ import InsertionSort from './InsertionSort';
 import MergeSort from './MergeSort';
 import QuickSort from './QuickSort';
 
+// ---------- Array ----------
+import LargestElement from './LargestElement';
+import SecondLargest from './SecondLargest';
+import ArraySorted from './ArraySorted';
+import RemoveDuplicates from './RemoveDuplicates';
+import LeftRotateOne from './LeftRotateOne';
+import LeftRotateD from './LeftRotateD';
+import MoveZeros from './MoveZeros';
+import LinearSearch from './LinearSearch';
+import Union from './Union';
+import MissingNumber from './MissingNumber';
+import MaxConsecutiveOnes from './MaxConsecutiveOnes';
+import NumberAppearingOnce from './NumberAppearingOnce';
+import LongestSubarraySumK from './LongestSubarraySumK';
+import TwoSum from './TwoSum';
+import Sort012 from './Sort012';
+import MajorityElement from './MajorityElement';
+import Kadane from './Kadane';
+import StockBuySell from './StockBuySell';
+import NextPermutation from './NextPermutation';
+import SetMatrixZeroes from './SetMatrixZeroes';
+import RotateMatrix from './RotateMatrix';
+import SpiralMatrix from './SpiralMatrix';
+
 // ---------- Binary Search (1D) ----------
 import BinarySearch from './BinarySearch';
 import LowerBoundSearch from './LowerBoundSearch';
@@ -38,8 +62,7 @@ import KthTwoArrays from './KthTwoArrays';
 
 // ---------- Strings ----------
 import ReverseString from './ReverseString';
-// New string algorithms (if you create them, import here)
-// import ValidParentheses from './ValidParentheses'; // already below
+
 
 // ---------- Linked List ----------
 import ReverseLinkedList from './ReverseLinkedList';
@@ -49,11 +72,6 @@ import DetectCycle from './DetectCycle';
 import Factorial from './Factorial';
 import Fibonacci from './Fibonacci';
 import ClimbingStairs from './ClimbingStairs';
-
-// ---------- Array Algorithms (New) ----------
-import TwoSum from './TwoSum';
-import Kadane from './Kadane';
-import MajorityElement from './MajorityElement';
 
 // ---------- Stack ----------
 import ValidParentheses from './ValidParentheses';
@@ -72,6 +90,29 @@ const componentMap = {
   'insertion-sort': InsertionSort,
   'merge-sort': MergeSort,
   'quick-sort': QuickSort,
+
+  'largest-element': LargestElement,
+  'second-largest': SecondLargest,
+  'array-sorted': ArraySorted,
+  'remove-duplicates': RemoveDuplicates,
+  'left-rotate-one': LeftRotateOne,
+  'left-rotate-d': LeftRotateD,
+  'move-zeros': MoveZeros,
+  'linear-search': LinearSearch,
+  'union': Union,
+  'missing-number': MissingNumber,
+  'max-consecutive-ones': MaxConsecutiveOnes,
+  'number-appearing-once': NumberAppearingOnce,
+  'longest-subarray-sum-k': LongestSubarraySumK,
+  '2sum': TwoSum,
+  'sort-012': Sort012,
+  'majority-element': MajorityElement,
+  'kadane': Kadane,
+  'stock-buy-sell': StockBuySell,
+  'next-permutation': NextPermutation,
+  'set-matrix-zeroes': SetMatrixZeroes,
+  'rotate-matrix': RotateMatrix,
+  'spiral-matrix': SpiralMatrix,
 
   // Binary Search (1D)
   'binary-search': BinarySearch,
@@ -107,17 +148,11 @@ const componentMap = {
 
   // Linked List
   'reverse-linked-list': ReverseLinkedList,
-  'detect-cycle': DetectCycle,
 
   // Recursion & DP
   'factorial': Factorial,
   'fibonacci': Fibonacci,
   'climbing-stairs': ClimbingStairs,
-
-  // Array Algorithms
-  '2sum': TwoSum,
-  'kadane': Kadane,
-  'majority-element': MajorityElement,
 
   // Tree
   'inorder-traversal': InorderTraversal,
