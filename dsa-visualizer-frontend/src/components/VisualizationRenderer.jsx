@@ -31,6 +31,18 @@ import NextPermutation from './NextPermutation';
 import SetMatrixZeroes from './SetMatrixZeroes';
 import RotateMatrix from './RotateMatrix';
 import SpiralMatrix from './SpiralMatrix';
+import PascalTriangle from './PascalTriangle';
+import MajorityElement2 from './MajorityElement2';
+import ThreeSum from './ThreeSum';
+import FourSum from './FourSum';
+import LargestSubarrayZero from './LargestSubarrayZero';
+import MergeOverlapping from './MergeOverlapping';
+import MergeTwoSortedArrays from './MergeTwoSortedArrays';
+import FindRepeatingMissing from './FindRepeatingMissing';
+import CountInversions from './CountInversions';
+import ReversePairs from './ReversePairs';
+import MaxProductSubarray from './MaxProductSubarray';
+
 
 // ---------- Binary Search (1D) ----------
 import BinarySearch from './BinarySearch';
@@ -113,6 +125,17 @@ const componentMap = {
   'set-matrix-zeroes': SetMatrixZeroes,
   'rotate-matrix': RotateMatrix,
   'spiral-matrix': SpiralMatrix,
+  'pascal-triangle': PascalTriangle,
+  'majority-element-2': MajorityElement2,
+  '3sum': ThreeSum,
+  '4sum': FourSum,
+  'largest-subarray-zero': LargestSubarrayZero,
+  'merge-overlapping': MergeOverlapping,
+  'merge-sorted-arrays': MergeTwoSortedArrays,
+  'find-repeating-missing': FindRepeatingMissing,
+  'count-inversions': CountInversions,
+  'reverse-pairs': ReversePairs,
+  'max-product-subarray': MaxProductSubarray,
 
   // Binary Search (1D)
   'binary-search': BinarySearch,

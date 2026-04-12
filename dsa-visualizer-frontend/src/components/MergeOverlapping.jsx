@@ -1,76 +1,61 @@
 import React, { useState, useEffect } from 'react';
 
-const RotateMatrix = () => {
+const MergeOverlapping = () => {
   const pseudocodeLines = [
-    "procedure rotate(matrix):",
-    "  n = length(matrix)",
-    "  // Transpose",
-    "  for i = 0 to n-1:",
-    "    for j = i+1 to n-1:",
-    "      swap(matrix[i][j], matrix[j][i])",
-    "  // Reverse each row",
-    "  for i = 0 to n-1:",
-    "    reverse(matrix[i])"
+    "procedure mergeIntervals(intervals):",
+    "  sort intervals by start",
+    "  merged = []",
+    "  for interval in intervals:",
+    "    if not merged or interval.start > merged[-1].end:",
+    "      merged.append(interval)",
+    "    else:",
+    "      merged[-1].end = max(merged[-1].end, interval.end)",
+    "  return merged"
   ];
 
-  const defaultMatrix = [
-    [1,2,3],
-    [4,5,6],
-    [7,8,9]
-  ];
-  const [matrix, setMatrix] = useState(defaultMatrix);
+  const defaultIntervals = [[1,3],[2,6],[8,10],[15,18]];
+  const [intervals, setIntervals] = useState(defaultIntervals);
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
-  const [matrixInput, setMatrixInput] = useState('1,2,3,4,5,6,7,8,9');
-  const [size, setSize] = useState(3);
+  const [inputStr, setInputStr] = useState('1,3,2,6,8,10,15,18');
 
-  const updateMatrix = () => {
-    const flat = matrixInput.split(',').map(x => Number(x.trim())).filter(n => !isNaN(n));
-    const s = Math.sqrt(flat.length);
-    if (s*s !== flat.length) return;
-    setSize(s);
-    const newMat = [];
-    for (let i = 0; i < s; i++) {
-      newMat.push(flat.slice(i*s, i*s+s));
+  const updateIntervals = () => {
+    const nums = inputStr.split(',').map(Number).filter(n => !isNaN(n));
+    const newIntervals = [];
+    for (let i = 0; i < nums.length; i += 2) {
+      if (i+1 < nums.length) newIntervals.push([nums[i], nums[i+1]]);
     }
-    setMatrix(newMat);
+    setIntervals(newIntervals);
   };
 
-  const generateSteps = (mat) => {
+  const generateSteps = (intervals) => {
     const steps = [];
-    let currentMat = mat.map(row => [...row]);
-    const n = currentMat.length;
-    steps.push({ matrix: currentMat, description: "Start", pseudocodeLine: 1 });
+    const sorted = [...intervals].sort((a,b) => a[0]-b[0]);
+    const merged = [];
+    steps.push({ intervals: sorted, description: "Sort intervals by start", pseudocodeLine: 1 });
 
-    // Transpose
-    for (let i = 0; i < n; i++) {
-      for (let j = i+1; j < n; j++) {
-        [currentMat[i][j], currentMat[j][i]] = [currentMat[j][i], currentMat[i][j]];
-        steps.push({ matrix: [...currentMat], highlight: [[i,j], [j,i]], description: `Swap (${i},${j}) and (${j},${i})`, pseudocodeLine: 3 });
+    for (let i = 0; i < sorted.length; i++) {
+      if (merged.length === 0 || sorted[i][0] > merged[merged.length-1][1]) {
+        merged.push([...sorted[i]]);
+        steps.push({ intervals: [...merged], highlight: [i], description: `Add interval [${sorted[i][0]},${sorted[i][1]}]`, pseudocodeLine: 3 });
+      } else {
+        const prev = merged[merged.length-1];
+        const newEnd = Math.max(prev[1], sorted[i][1]);
+        merged[merged.length-1] = [prev[0], newEnd];
+        steps.push({ intervals: [...merged], highlight: [i], description: `Merge [${prev[0]},${prev[1]}] with [${sorted[i][0]},${sorted[i][1]}] → [${prev[0]},${newEnd}]`, pseudocodeLine: 4 });
       }
     }
-    steps.push({ matrix: currentMat, description: "After transpose", pseudocodeLine: 0 });
-
-    // Reverse each row
-    for (let i = 0; i < n; i++) {
-      let left = 0, right = n-1;
-      while (left < right) {
-        [currentMat[i][left], currentMat[i][right]] = [currentMat[i][right], currentMat[i][left]];
-        steps.push({ matrix: [...currentMat], highlight: [[i,left], [i,right]], description: `Reverse row ${i}: swap ${currentMat[i][left]} and ${currentMat[i][right]}`, pseudocodeLine: 5 });
-        left++; right--;
-      }
-    }
-    steps.push({ matrix: currentMat, description: "Final rotated matrix", pseudocodeLine: 0 });
+    steps.push({ intervals: merged, description: `Merged intervals: ${JSON.stringify(merged)}` });
     return steps;
   };
 
   useEffect(() => {
-    setSteps(generateSteps(matrix));
+    setSteps(generateSteps(intervals));
     setCurrentStep(0);
     setIsPlaying(false);
-  }, [matrix]);
+  }, [intervals]);
 
   useEffect(() => {
     let timer;
@@ -81,39 +66,33 @@ const RotateMatrix = () => {
   }, [isPlaying, currentStep, speed, steps.length]);
 
   const step = steps[currentStep] || {};
-  const n = matrix.length;
 
-  const getBgColor = (r, c) => {
-    if (step.highlight && step.highlight.some(([rr,cc]) => rr===r && cc===c)) return 'bg-yellow-500';
+  const getHighlightClass = (idx) => {
+    if (step.highlight && step.highlight.includes(idx)) return 'bg-yellow-500';
     return 'bg-blue-500';
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-[#0a0a0a] text-gray-200 rounded-2xl shadow-2xl font-mono border border-[#222222]">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Rotate Matrix 90° Clockwise</h2>
+        <h2 className="text-3xl font-bold text-[#569cd6] mb-2">Merge Overlapping Intervals</h2>
         <div className="flex justify-center gap-4 mb-4">
-          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: O(n²)</span>
-          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">💾 Space: O(1)</span>
+          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">⏱️ Time: O(n log n)</span>
+          <span className="bg-[#2d2d2d] px-3 py-1 rounded-full text-sm border border-[#3c3c3c]">💾 Space: O(n)</span>
         </div>
       </div>
 
       <div className="flex justify-center gap-4 mb-6">
-        <input type="text" value={matrixInput} onChange={(e) => setMatrixInput(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
-        <button onClick={updateMatrix} className="bg-[#0e639c] hover:bg-[#1177bb] text-white px-4 py-1 rounded">Update</button>
+        <input type="text" value={inputStr} onChange={(e) => setInputStr(e.target.value)} className="bg-[#1e1e1e] border border-[#3c3c3c] rounded px-3 py-1 focus:border-[#569cd6]" />
+        <button onClick={updateIntervals} className="bg-[#0e639c] hover:bg-[#1177bb] text-white px-4 py-1 rounded">Update</button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left column: Visualization */}
         <div className="lg:w-2/3 space-y-6">
-          <div className="flex flex-col items-center gap-2 mb-6">
-            {step.matrix && step.matrix.map((row, r) => (
-              <div key={r} className="flex gap-2">
-                {row.map((val, c) => (
-                  <div key={c} className={`w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-2xl transition-all duration-300 ${getBgColor(r,c)} border-2 border-[#222222]`}>
-                    {val}
-                  </div>
-                ))}
+          <div className="flex flex-col gap-2">
+            {step.intervals?.map((interval, idx) => (
+              <div key={idx} className={`p-2 rounded ${getHighlightClass(idx)}`}>
+                [{interval[0]}, {interval[1]}]
               </div>
             ))}
           </div>
@@ -146,7 +125,6 @@ const RotateMatrix = () => {
           </div>
         </div>
 
-        {/* Right column: Pseudocode */}
         <div className="lg:w-1/3 bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 font-mono text-sm shadow-inner">
           <h3 className="text-lg font-bold text-[#569cd6] mb-4">📝 Pseudocode</h3>
           <div className="space-y-1">
@@ -160,4 +138,4 @@ const RotateMatrix = () => {
   );
 };
 
-export default RotateMatrix;
+export default MergeOverlapping;
