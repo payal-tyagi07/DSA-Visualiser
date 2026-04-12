@@ -33,7 +33,6 @@ export const createGraphVisualizer = (config) => {
 
     const step = steps[currentStep] || {};
 
-    // Fixed positions for nodes
     const positions = {
       'A': { x: 200, y: 100 },
       'B': { x: 100, y: 200 },
@@ -83,7 +82,6 @@ export const createGraphVisualizer = (config) => {
           <p className="text-gray-300"><span className="font-bold text-[#9cdcfe]">Step {currentStep+1}:</span> {step.description}</p>
         </div>
 
-        {/* Progress, speed, buttons (same as arrayFactory) */}
         <div>
           <div className="flex justify-between text-sm text-gray-400 mb-1">
             <span>Progress</span><span>{Math.round(((currentStep+1)/steps.length)*100)}%</span>
